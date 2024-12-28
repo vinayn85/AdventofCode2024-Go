@@ -1,5 +1,7 @@
 package Day2
 
+//TODO Need to implement damper functionality fully
+
 import (
 	"bufio"
 	"fmt"
@@ -13,21 +15,48 @@ import (
 var sourceLists [][]int
 var reportStatus = make(map[int]string)
 var safeReportCount int
+var dampedSafeReportCount int
+var dampedLists [][]int
 
 func Day2() {
 	createInputListsFromFile()
-	verifyReportSafetyStatus()
+	verifyReportSafetyStatus(sourceLists)
 	for _, val := range reportStatus {
 		if val == "safe" {
 			safeReportCount++
 		}
 	}
-	fmt.Println("Safe report count: ", safeReportCount)
+	fmt.Println("Original Safe report count: ", safeReportCount)
+	//fmt.Println(reportStatus)
+	applyDamper()
+	verifyReportSafetyStatus(dampedLists)
+	for _, val := range reportStatus {
+		if val == "safe" {
+			dampedSafeReportCount++
+		}
+	}
+	fmt.Println("Safe report count after damper: ", dampedSafeReportCount)
+
+	//fmt.Println(reportStatus)
 }
 
-func verifyReportSafetyStatus() {
+func applyDamper() {
+	for _, list := range sourceLists {
+		fmt.Println(list)
+		for i := 0; i < len(list)-1; i++ {
+			if !(list[i+1]-list[i] >= 1 || list[i+1]-list[i] <= 3 && list[i+1]-list[i] > 0) {
+				list = append(list[:i], list[i+1:]...)
+				fmt.Println(list)
+				dampedLists = append(dampedLists, list)
+				break
+			}
+		}
+	}
+}
+
+func verifyReportSafetyStatus(inputLists [][]int) {
 	//verify if ascending or descending then check if the differences between levels is acceptable
-	for index, val := range sourceLists {
+	for index, val := range inputLists {
 		var t = make([]int, len(val))
 		copy(t, val) // creating a copy to compare cleanly
 		slices.Sort(t)
@@ -59,6 +88,7 @@ func checkAdjacentLevelDifferenceforAscending(inputSlice []int) bool {
 				continue
 			} else {
 				return false
+
 			}
 		}
 	}
