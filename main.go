@@ -1,9 +1,9 @@
 package main
 
 import (
-	"AdventofCode2024-Go/solutions/Day1"
+	"AdventofCode2024-Go/solutions/Day2"
 )
 
 func main() {
-	Day1.Day1b()
+	Day2.Day2a()
 }
